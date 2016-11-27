@@ -1,6 +1,10 @@
 ## Requirements
 * Node.js v7+
 
-Run with
+## Initialize
+
+    npm install
+
+## Run
 
     node --harmony-async-await index
