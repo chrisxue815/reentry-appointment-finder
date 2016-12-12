@@ -1,12 +1,16 @@
 {
   "name": "reentry",
   "version": "1.0.0",
-  "description": "",
+  "description": "Ireland reentry visa appointment finder",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chrisxue815/reentry-appointment-finder.git"
+  },
+  "author": "Chris Xue <chrisxue815@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.4.6",
