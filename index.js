@@ -22,7 +22,7 @@ function* getWeekdaysLoop(start, end) {
 }
 
 async function reentry() {
-  let start = new Date(2017, 3, 13);
+  let start = new Date(2017, 3, 13); // Note that the month is 0-based, i.e., 0 means January
   let end = new Date(2017, 4, 31);
   let weekdays = getWeekdaysLoop(start, end);
 
