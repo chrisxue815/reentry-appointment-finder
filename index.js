@@ -14,16 +14,16 @@ function* getWeekdays(start, end) {
 }
 
 function* getWeekdaysLoop(start, end) {
-  for (;;) {
+  for (; ;) {
     for (let date of getWeekdays(start, end)) {
       yield date;
     }
   }
 }
 
-async function main() {
-  let start = new Date();
-  let end = new Date(2017, 0, 21);
+async function reentry() {
+  let start = new Date(2017, 3, 13);
+  let end = new Date(2017, 4, 31);
   let weekdays = getWeekdaysLoop(start, end);
 
   for (let date of weekdays) {
@@ -31,7 +31,7 @@ async function main() {
     let url = `https://reentryvisa.inis.gov.ie/website/INISOA/IOA.nsf/(getApps4DT)?openagent&dt=${dateStr}&type=I&num=1&_=1480154930796`;
     let options = {
       url: url,
-      ciphers: 'DES-CBC3-SHA'
+      ciphers: 'DES-CBC3-SHA',
     };
 
     try {
@@ -40,7 +40,6 @@ async function main() {
 
       if (json.empty !== 'TRUE') {
         console.log(dateStr, ' ', body);
-        break;
       }
 
       await bluebird.delay(1000);
@@ -52,4 +51,40 @@ async function main() {
   }
 }
 
-main();
+async function gnib() {
+  let urls = [
+    `https://burghquayregistrationoffice.inis.gov.ie/Website/AMSREG/AMSRegWeb.nsf/(getAppsNear)?openpage&cat=Work&sbcat=All&typ=New&_=1503338430497`,
+    `https://burghquayregistrationoffice.inis.gov.ie/Website/AMSREG/AMSRegWeb.nsf/(getAppsNear)?openpage&cat=Work&sbcat=All&typ=Renewal&_=1503338430497`,
+    `https://burghquayregistrationoffice.inis.gov.ie/Website/AMSREG/AMSRegWeb.nsf/(getApps4DTAvailability)?openpage&&cat=Work&sbcat=All&typ=New&_=1503392385907`,
+    `https://burghquayregistrationoffice.inis.gov.ie/Website/AMSREG/AMSRegWeb.nsf/(getApps4DTAvailability)?openpage&&cat=Work&sbcat=All&typ=Renewal&_=1503392385907`,
+  ];
+
+  for (; ;) {
+    for (let url of urls) {
+      let options = {
+        url: url,
+        ciphers: 'DES-CBC3-SHA',
+        rejectUnauthorized: false,
+      };
+
+      try {
+        let body = await rp(options);
+        let json = JSON.parse(body);
+
+        if (json.slots && json.slots.length > 0) {
+          console.log(url);
+          console.log(body);
+        }
+
+        await bluebird.delay(5000);
+      }
+      catch (ex) {
+        console.log(url);
+        console.log(ex);
+        return;
+      }
+    }
+  }
+}
+
+gnib();
