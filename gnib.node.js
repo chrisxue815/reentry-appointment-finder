@@ -24,7 +24,7 @@ async function gnib() {
         let body = await rp(options);
         let json = JSON.parse(body);
 
-        if (json.slots && json.slots.length > 0) {
+        if (json.slots && json.slots.length > 0 && json.slots !== '[]') {
           console.log(url);
           console.log(body);
         }
