@@ -1,8 +1,13 @@
 'use strict';
 
 const bluebird = require('bluebird');
-const dateFormat = require('dateformat');
+const moment = require('moment');
 const rp = require('request-promise');
+
+let start = moment('20170723', 'YYYYMMDD');
+let end = moment('20170823', 'YYYYMMDD');
+
+gnib();
 
 async function gnib() {
   let urls = [
@@ -25,8 +30,16 @@ async function gnib() {
         let json = JSON.parse(body);
 
         if (json.slots && json.slots.length > 0 && json.slots !== '[]') {
-          console.log(url);
-          console.log(body);
+          for (let slot of json.slots) {
+            let time = slot.time
+              ? moment(slot.time, 'DD MMMM YYYY - HH:mm')
+              : moment(slot, 'DD/MM/YYYY');
+
+            if (time >= start && time <= end) {
+              console.log(url);
+              console.log(body);
+            }
+          }
         }
 
         await bluebird.delay(5000);
@@ -39,5 +52,3 @@ async function gnib() {
     }
   }
 }
-
-gnib();
