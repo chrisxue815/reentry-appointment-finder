@@ -55,7 +55,7 @@ function gnib() {
       }
     })
     .fail((jqxhr, textStatus, error) => {
-      err = 'Request Failed: ' + textStatus + ', ' + error;
+      err = 'Request Failed: ' + textStatus + ', ' + error + '\n\n' + url;
       console.log(err);
       alert(err);
       clearInterval(intervalId);
