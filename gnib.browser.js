@@ -14,7 +14,7 @@ libs = [
   'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js',
 ];
 
-numLoadedLibs;
+numLoadedLibs = 0;
 
 for (lib of libs) {
   node = document.createElement('script');
