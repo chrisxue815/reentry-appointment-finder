@@ -19,8 +19,8 @@ for (lib of libs) {
   node = document.createElement('script');
   node.type = 'text/javascript';
   node.src = lib;
-  node.async = true
-  node.addEventListener('load', onLibLoaded)
+  node.async = true;
+  node.addEventListener('load', onLibLoaded);
   document.head.appendChild(node);
 }
 
