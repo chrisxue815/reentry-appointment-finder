@@ -31,24 +31,29 @@ function onLibLoaded() {
   start = moment(startDate, 'YYYYMMDD');
   end = moment(endDate, 'YYYYMMDD');
 
-  weekdays = Array.from(getWeekdays(start, end));
-  index = -1;
-  intervalId = setInterval(gnib, intervalMilliseconds);
+  url = `https://reentryvisa.inis.gov.ie/website/INISOA/IOA.nsf/(getDTAvail)?openagent&type=I&_=1520463304009`;
 
-  function gnib() {
+  index = -1;
+
+  intervalId = setInterval(reentry, intervalMilliseconds);
+
+  function reentry() {
     console.log('Running');
     index++;
-    weekday = weekdays[index % weekdays.length];
-    dateStr = moment(weekday).format('DD/MM/YYYY')
-    url = `https://reentryvisa.inis.gov.ie/website/INISOA/IOA.nsf/(getApps4DT)?openagent&dt=${dateStr}&type=I&num=1&_=1480154930796`;
 
     $.getJSON(url)
       .done(json => {
-        if (json.empty !== 'TRUE') {
-          msg = url + '\n\n' + JSON.stringify(json);
-          console.log(msg);
-          alert(msg);
-          clearInterval(intervalId);
+        if (json.dates && json.dates.length > 0 && json.dates[0] !== '01/01/1900') {
+          for (let dateStr of json.dates) {
+            let date = moment(dateStr, 'DD/MM/YYYY');
+
+            if (date >= start && date <= end) {
+              msg = url + '\n\n' + JSON.stringify(json);
+              console.log(msg);
+              alert(msg);
+              clearInterval(intervalId);
+            }
+          }
         }
       })
       .fail((jqxhr, textStatus, error) => {
@@ -57,14 +62,5 @@ function onLibLoaded() {
         alert(err);
         clearInterval(intervalId);
       });
-  }
-
-  function* getWeekdays(start, end) {
-    for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
-      let day = date.getDay();
-      if (day != 0 && day != 6) {
-        yield new Date(date);
-      }
-    }
   }
 }
